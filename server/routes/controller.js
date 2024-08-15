@@ -59,7 +59,12 @@ router.patch('/:id',async(req,res)=>
     try
    {
         const model = await Model.findById(req.params.id) 
-        model.sub = req.body.sub
+        if(!model) return res.status(404).json({message: 'not found'});
+        if(req.body.id!=null)model.name=req.body.id;
+        if(req.body.name!=null)model.name=req.body.name;
+        if(req.body.dept!=null)model.name=req.body.dept;
+        if(req.body.tech!=null)model.name=req.body.tech;
+        if(req.body.sub!=null)model.name=req.body.sub;
         const a1 = await model.save()
         res.json(a1)   
     }
@@ -69,5 +74,18 @@ catch(err)
     }
 
 })
+router.delete('/:id',async(req,res)=>{
+    try{
+        const model = await Model.findById(req.params.id);
+        if(!model) return res.status(404).json({message: 'not found'});
+        await model.deleteOne();
+        res.json({message: 'deleted'});
+    }
+    catch(err){
+        res.status(500).send('Error:'+err.message);
+    }
+        
 
-module.exports = router
+    });
+
+module.exports = router;
